@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mentor Divergente - Análise técnica do inconsciente baseada na Teoria da Permissão">
+    <title>Mentor Divergente | Aliança Divergente</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-content">
+            <div class="header-logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="14" stroke="#d4a574" stroke-width="1.5" opacity="0.8"/>
+                    <path d="M10 16 L14 20 L22 11" stroke="#d4a574" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="header-title">MENTOR DIVERGENTE</span>
+            </div>
+            <nav class="header-nav">
+                <a href="#hero" class="nav-link">Início</a>
+                <a href="#chat-container" class="nav-link">Chat</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-image-container">
+            <img src="images/Elton.png" alt="Elton Euller - Mentor Divergente" class="hero-image">
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title">MENTOR DIVERGENTE</h1>
+
+            <p class="hero-subtitle">
+                Análise técnica do inconsciente baseada na Teoria da Permissão
+            </p>
+
+            <p class="hero-quote">
+                <em>"Até você tornar consciente, o inconsciente vai guiar sua vida e você vai chamá-lo de destino."</em>
+            </p>
+
+            <button class="hero-cta" onclick="scrollToChat()">
+                Descubra seus limites invisíveis ↓
+            </button>
+        </div>
+
+        <div class="divider"></div>
+    </section>
+
+    <!-- Chat Widget -->
+    <div id="chat-container" class="chat-container">
+        <div class="chat-widget">
+            <!-- Header -->
+            <div class="chat-header">
+                <div class="chat-header-content">
+                    <div class="chat-symbol">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="#0a1a1a" stroke-width="2"/>
+                            <path d="M8 12 L11 15 L16 9" stroke="#0a1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h2 class="chat-title">Mentor Divergente</h2>
+                </div>
+            </div>
+
+            <!-- Messages Area -->
+            <div class="chat-messages" id="chat-messages">
+                <div class="loading-screen" id="loading-screen">
+                    <div class="spinner"></div>
+                    <p>Inicializando conversa...</p>
+                </div>
+                <div class="chat-start-screen" id="start-screen" style="display: none;">
+                    <div class="start-content">
+                        <h3>Pronto para começar?</h3>
+                        <p>Descubra os padrões inconscientes que limitam seus resultados</p>
+                        <button class="start-button" onclick="startChat()">Vamos começar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-container">
+                <div class="typing-indicator" id="typing-indicator" style="display: none;">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="chat-input-wrapper">
+                    <textarea
+                        id="chat-input"
+                        class="chat-input"
+                        placeholder="Digite sua mensagem..."
+                        rows="1"
+                        disabled
+                    ></textarea>
+                    <button
+                        id="send-button"
+                        class="send-button"
+                        onclick="sendMessage()"
+                        disabled
+                        aria-label="Enviar mensagem"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 10L18 2L10 18L8 11L2 10Z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="error-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>Erro de Conexão</h3>
+            <p id="error-message">Não foi possível conectar ao serviço. Tente novamente mais tarde.</p>
+            <button onclick="closeErrorModal()" class="modal-button">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Mentor Divergente</h3>
+                <p>Análise técnica do inconsciente baseada na Teoria da Permissão</p>
+            </div>
+            <div class="footer-section">
+                <h4>Navegação</h4>
+                <ul class="footer-links">
+                    <li><a href="#hero">Início</a></li>
+                    <li><a href="#chat-container">Chat</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Conceito</h4>
+                <p class="footer-credit">Desenvolvido com base no conceito do Mentor Divergente por <strong>Elton Euller</strong></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Aliança Divergente. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="scripts/openai.js"></script>
+    <script src="scripts/chat.js"></script>
+</body>
+</html>
