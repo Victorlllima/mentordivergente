@@ -204,3 +204,6 @@ app.listen(PORT, () => {
 Ready to receive requests...
     `);
 });
+
+// Export app for Vercel
+module.exports = app;
