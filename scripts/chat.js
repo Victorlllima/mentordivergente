@@ -63,19 +63,34 @@ function showStartScreen() {
 
 // Start chat conversation
 async function startChat() {
+    // Hide start button and show conversation starters
+    const startButton = document.querySelector('.start-button');
+    const conversationStarters = document.getElementById('conversation-starters');
+
+    startButton.style.display = 'none';
+    conversationStarters.style.display = 'flex';
+}
+
+// Send starter message
+async function sendStarterMessage(button) {
+    const message = button.textContent;
     const startScreen = document.getElementById('start-screen');
+
+    // Hide start screen
     startScreen.style.display = 'none';
 
-    // Disable input while sending initial message
+    // Disable input while sending message
     setChatEnabled(false);
+
+    // Add user message to chat
+    addMessage(message, 'user');
 
     // Show typing indicator
     showTypingIndicator(true);
 
     try {
-        // Send initial message to assistant
-        const initialMessage = "Olá, estou pronto para começar.";
-        const response = await sendMessageToAssistant(initialMessage);
+        // Send message to assistant
+        const response = await sendMessageToAssistant(message);
 
         // Hide typing indicator
         showTypingIndicator(false);

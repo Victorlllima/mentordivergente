@@ -314,8 +314,8 @@ body {
 
 .chat-widget {
     width: 90%;
-    max-width: 600px;
-    height: 70vh;
+    max-width: 800px;
+    height: 80vh;
     background: var(--background);
     border-radius: 16px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6),
@@ -568,8 +568,11 @@ body {
     font-family: var(--font-secondary);
     font-size: var(--body-size);
     resize: none;
+    min-height: 48px;
     max-height: 120px;
+    overflow-y: auto;
     transition: border-color var(--transition-fast);
+    line-height: 1.5;
 }
 
 .chat-input:focus {
@@ -581,6 +584,24 @@ body {
 .chat-input:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.chat-input::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-input::-webkit-scrollbar-track {
+    background: rgba(26, 77, 77, 0.2);
+    border-radius: 3px;
+}
+
+.chat-input::-webkit-scrollbar-thumb {
+    background: var(--secondary);
+    border-radius: 3px;
+}
+
+.chat-input::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 165, 116, 0.8);
 }
 
 .send-button {
@@ -610,6 +631,41 @@ body {
 
 .send-button:active:not(:disabled) {
     transform: translateY(0);
+}
+
+/* Conversation Starters */
+.conversation-starters {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-lg);
+    width: 100%;
+    max-width: 400px;
+}
+
+.starter-button {
+    padding: var(--spacing-md);
+    background: rgba(26, 77, 77, 0.4);
+    color: var(--text);
+    border: 2px solid rgba(212, 165, 116, 0.3);
+    border-radius: 8px;
+    font-family: var(--font-secondary);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-align: left;
+    line-height: 1.5;
+}
+
+.starter-button:hover {
+    background: rgba(26, 77, 77, 0.6);
+    border-color: var(--secondary);
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(212, 165, 116, 0.2);
+}
+
+.starter-button:active {
+    transform: translateX(3px);
 }
 
 /* ===================================
@@ -870,7 +926,7 @@ body {
 
     .chat-widget {
         width: 95%;
-        height: 60vh;
+        height: 75vh;
         border-radius: 12px;
     }
 
