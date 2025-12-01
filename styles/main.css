@@ -1018,6 +1018,28 @@ body {
         margin: var(--spacing-md);
         padding: var(--spacing-lg);
     }
+
+    /* Chat input layout adjustments for mobile */
+    .chat-input-wrapper {
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+    }
+
+    .chat-input {
+        width: 100%;
+        flex: 1 1 100%;
+        order: 1;
+    }
+
+    .mic-button,
+    .send-button {
+        flex: 0 0 auto;
+        order: 2;
+    }
+
+    .mic-button {
+        margin-left: auto;
+    }
 }
 
 /* ===================================
