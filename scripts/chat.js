@@ -312,7 +312,15 @@ function setupInputHandlers() {
     // Auto-resize textarea
     input.addEventListener('input', function () {
         this.style.height = 'auto';
-        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        const newHeight = Math.min(this.scrollHeight, 120);
+        this.style.height = newHeight + 'px';
+
+        // Enable scroll only when content exceeds max height
+        if (this.scrollHeight > 120) {
+            this.style.overflowY = 'auto';
+        } else {
+            this.style.overflowY = 'hidden';
+        }
     });
 
     // Send on Enter (without Shift)
