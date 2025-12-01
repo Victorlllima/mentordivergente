@@ -17,8 +17,8 @@ function initializeSpeechRecognition() {
 
     recognition = new SpeechRecognition();
     recognition.lang = 'pt-BR';
-    recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.continuous = true;  // Changed to continuous mode
+    recognition.interimResults = true;  // Show interim results
     recognition.maxAlternatives = 1;
 
     recognition.onstart = function() {
@@ -28,38 +28,67 @@ function initializeSpeechRecognition() {
     };
 
     recognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript;
-        console.log('Voice input:', transcript);
-
         const input = document.getElementById('chat-input');
-        // Append to existing text or replace if empty
-        if (input.value.trim()) {
-            input.value += ' ' + transcript;
-        } else {
-            input.value = transcript;
+        let finalTranscript = '';
+        let interimTranscript = '';
+
+        // Process all results
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                finalTranscript += transcript + ' ';
+            } else {
+                interimTranscript += transcript;
+            }
         }
 
-        // Trigger input event to resize textarea
-        input.dispatchEvent(new Event('input'));
+        // Add final transcript to input
+        if (finalTranscript) {
+            console.log('Final voice input:', finalTranscript);
+            if (input.value.trim()) {
+                input.value += ' ' + finalTranscript.trim();
+            } else {
+                input.value = finalTranscript.trim();
+            }
+
+            // Trigger input event to resize textarea
+            input.dispatchEvent(new Event('input'));
+        }
+
         input.focus();
     };
 
     recognition.onerror = function(event) {
         console.error('Voice recognition error:', event.error);
-        isRecording = false;
-        updateMicButtonState();
 
         if (event.error === 'not-allowed') {
+            isRecording = false;
+            updateMicButtonState();
             showErrorModal('Permissão de microfone negada. Por favor, permita o acesso ao microfone.');
-        } else if (event.error !== 'no-speech' && event.error !== 'aborted') {
+        } else if (event.error === 'no-speech') {
+            // Ignore no-speech errors in continuous mode
+            console.log('No speech detected, continuing...');
+        } else if (event.error !== 'aborted') {
+            isRecording = false;
+            updateMicButtonState();
             showErrorModal('Erro ao capturar áudio. Tente novamente.');
         }
     };
 
     recognition.onend = function() {
         console.log('Voice recognition ended');
-        isRecording = false;
-        updateMicButtonState();
+        // Only update state if user didn't manually stop it
+        if (isRecording) {
+            // Restart if still in recording mode (browser might have stopped it)
+            try {
+                recognition.start();
+                console.log('Restarting recognition...');
+            } catch (error) {
+                console.log('Recognition already started or error:', error);
+                isRecording = false;
+                updateMicButtonState();
+            }
+        }
     };
 
     return recognition;
@@ -82,10 +111,16 @@ function toggleVoiceInput() {
     }
 
     if (isRecording) {
+        // Stop recording
+        isRecording = false;
         recognition.stop();
+        updateMicButtonState();
+        console.log('Stopping voice recognition by user action');
     } else {
+        // Start recording
         try {
             recognition.start();
+            console.log('Starting voice recognition');
         } catch (error) {
             console.error('Error starting recognition:', error);
             showErrorModal('Erro ao iniciar reconhecimento de voz. Tente novamente.');
