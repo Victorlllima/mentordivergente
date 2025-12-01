@@ -3,6 +3,67 @@
 // ===================================
 
 let chatInitialized = false;
+let isRecording = false;
+let recognition = null;
+
+// Initialize speech recognition
+function initializeSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        console.warn('Speech recognition not supported in this browser');
+        return null;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.lang = 'pt-BR';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = function() {
+        console.log('Voice recognition started');
+        isRecording = true;
+        updateMicButtonState();
+    };
+
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        console.log('Voice input:', transcript);
+
+        const input = document.getElementById('chat-input');
+        // Append to existing text or replace if empty
+        if (input.value.trim()) {
+            input.value += ' ' + transcript;
+        } else {
+            input.value = transcript;
+        }
+
+        // Trigger input event to resize textarea
+        input.dispatchEvent(new Event('input'));
+        input.focus();
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Voice recognition error:', event.error);
+        isRecording = false;
+        updateMicButtonState();
+
+        if (event.error === 'not-allowed') {
+            showErrorModal('Permissão de microfone negada. Por favor, permita o acesso ao microfone.');
+        } else if (event.error !== 'no-speech' && event.error !== 'aborted') {
+            showErrorModal('Erro ao capturar áudio. Tente novamente.');
+        }
+    };
+
+    recognition.onend = function() {
+        console.log('Voice recognition ended');
+        isRecording = false;
+        updateMicButtonState();
+    };
+
+    return recognition;
+}
 
 // Scroll to chat section
 function scrollToChat() {
@@ -10,13 +71,55 @@ function scrollToChat() {
     chatContainer.scrollIntoView({ behavior: 'smooth' });
 }
 
+// Toggle voice input
+function toggleVoiceInput() {
+    if (!recognition) {
+        recognition = initializeSpeechRecognition();
+        if (!recognition) {
+            showErrorModal('Reconhecimento de voz não suportado neste navegador. Use Chrome, Edge ou Safari.');
+            return;
+        }
+    }
+
+    if (isRecording) {
+        recognition.stop();
+    } else {
+        try {
+            recognition.start();
+        } catch (error) {
+            console.error('Error starting recognition:', error);
+            showErrorModal('Erro ao iniciar reconhecimento de voz. Tente novamente.');
+        }
+    }
+}
+
+// Update mic button state
+function updateMicButtonState() {
+    const micButton = document.getElementById('mic-button');
+    if (micButton) {
+        if (isRecording) {
+            micButton.classList.add('recording');
+            micButton.setAttribute('aria-label', 'Parar gravação');
+            micButton.setAttribute('title', 'Parar gravação');
+        } else {
+            micButton.classList.remove('recording');
+            micButton.setAttribute('aria-label', 'Gravar áudio');
+            micButton.setAttribute('title', 'Gravar áudio');
+        }
+    }
+}
+
 // Enable/Disable chat input
 function setChatEnabled(enabled) {
     const input = document.getElementById('chat-input');
-    const button = document.getElementById('send-button');
+    const sendButton = document.getElementById('send-button');
+    const micButton = document.getElementById('mic-button');
 
     input.disabled = !enabled;
-    button.disabled = !enabled;
+    sendButton.disabled = !enabled;
+    if (micButton) {
+        micButton.disabled = !enabled;
+    }
 
     if (enabled && !chatInitialized) {
         input.placeholder = 'Digite sua mensagem...';
